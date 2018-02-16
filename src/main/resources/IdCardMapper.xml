@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="onetoone.IdCardMapper">
+<insert id="save" parameterType="onetoone.IdCard">
+    INSERT INTO tb_idcard(cardNo,person_pid) VALUES (#{cardNo},#{person.pid})
+</insert>
+    <select id="findById" resultType="onetoone.IdCard" parameterType="java.lang.String">
+        SELECT *FROM tb_idcard WHERE cardNo=#{cardNo}
+    </select>
+    <resultMap type="onetoone.IdCard" id="myMap1" >
+        <id column="cardNo" property="cardNo"></id>
+        <association property="person" column="person_pid" javaType="onetoone.Person">
+            <id column="pid" property="pid"/>
+            <result column="name" property="name"/>
+            <result column="sex" property="sex"/>
+            <result column="birthday" property="birthday"/>
+        </association>
+    </resultMap>
+    <select id="findByPersonId" resultMap="myMap1" parameterType="java.lang.Integer">
+        SELECT idcard.cardNo,person.pid,person.name,person.sex,person.birthday
+        FROM tb_person person,tb_idcard idcard
+        WHERE idcard.person_pid=person.pid and
+        idcard.person_pid=#{pid}
+    </select>
+
+</mapper>

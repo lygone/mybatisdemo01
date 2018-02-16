@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="onetomany.DepartmentMapper">
+<insert id="save" parameterType="onetomany.Department">
+    INSERT INTO o2m_department(deptId,name,deptDesc) VALUES (#{deptId},#{name},#{deptDesc})
+</insert>
+    <select id="findById" resultType="onetomany.Department">
+        SELECT *from o2m_department WHERE deptId=#{deptId}
+    </select>
+    <resultMap id="findDepart" type="onetomany.Department">
+        <id column="deptId" property="deptId"></id>
+        <result column="name" property="name"></result>
+        <result column="deptDesc" property="deptDesc"></result>
+        <!--集合属性要使用collection
+            property属性：指该类中的集合的名称
+            javaType:指集合存放的类型
+            ofType：集合中存放的类型
+            column属性：用来指定当前表的主键列名称（该主键列名称的值，作为子查询select属性中对应方法的入参值
+             select属性：用来指定子查询（通过部门编号来查询员工信息）
+             fetchType属性：用来指定是立即加载(eager)还是懒加载(lazy)对应的值
+        -->
+        <collection property="employeeList" column="deptId" javaType="ArrayList" ofType="onetomany.Employee" select="onetomany.EmployeeMapper.findByDeptId">
+
+        </collection>
+    </resultMap>
+    <select id="findDeptAndEmpsById" resultMap="findDepart">
+        SELECT *FROM o2m_department WHERE deptId=#{deptId}
+    </select>
+</mapper>

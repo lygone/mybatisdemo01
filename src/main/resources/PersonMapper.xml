@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="onetoone.PersonMapper">
+    <insert id="save" parameterType="onetoone.Person">
+        INSERT INTO tb_person(name,sex,birthday) VALUES (#{name},#{sex},#{birthday})
+    </insert>
+
+    <resultMap id="findPersonAndIdcard" type="onetoone.Person">
+        <id column="pid" property="pid"></id>
+        <result column="name" property="name"></result>
+        <result column="sex" property="sex"></result>
+        <result column="birthday" property="birthday"></result>
+        <association property="idcard" javaType="onetoone.IdCard">
+            <id column="cardNo" property="cardNo"></id>
+        </association>
+    </resultMap>
+    <select id="findById"  resultMap="findPersonAndIdcard">
+        select p.pid pid,name,sex,birthday,c.cardNo
+
+       from tb_person p,tb_idcard c
+       WHERE p.pid=c.person_pid AND p.pid=#{pid}
+    </select>
+
+    <select id="findSimpleById" resultType="onetoone.Person">
+        select * from tb_person where pid=#{pid}
+    </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="onetomany.EmployeeMapper">
+        <insert id="save" parameterType="onetomany.Employee">
+                insert into o2m_employee(empId,name,hireDate,dept_id)values(#{empId},#{name},#{hireDate},#{dept.deptId})
+        </insert>
+        <resultMap type="onetomany.Employee" id="myEmpMap">
+                <id column="empId" property="empId"/>
+                <result column="name" property="name"/>
+                <result column="hireDate" property="hireDate"/>
+                <association property="dept" column="dept_id"
+                             javaType="onetomany.Department" select="onetomany.DepartmentMapper.findById">
+                </association>
+        </resultMap>
+        <select id="findById" resultMap="myEmpMap">
+                select * from o2m_employee where empId=#{empId}
+        </select>
+        <select id="findByDeptId" resultType="onetomany.Employee">
+                select * from o2m_employee where dept_id=#{deptId}
+        </select>
+</mapper>

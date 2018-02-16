@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="manytomany.CourseMapper">
+<insert id="save" parameterType="manytomany.Course">
+    INSERT INTO m2m_course(cid,name,xuefeng,cdesc) VALUES (#{cid},#{name},#{xuefeng},#{cdesc})
+</insert>
+    <select id="findById" resultType="manytomany.Course">
+        SELECT *FROM m2m_course WHERE cid=#{cid}
+    </select>
+<resultMap id="myfindById" type="manytomany.Course">
+    <id column="cid" property="cid"></id>
+    <result column="cname" property="name"></result>
+    <result column="xuefeng" property="xuefeng"></result>
+    <result column="cdesc" property="cdesc"></result>
+    <collection property="stus" column="cid" javaType="ArrayList" ofType="manytomany.Student">
+        <id column="stuId" property="stuId"></id>
+        <result column="sname" property="name"></result>
+    </collection>
+</resultMap>
+    <select id="findCourseAndStusById" resultMap="myfindById">
+        SELECT s.stuId,s.name sname,c.cid,c.name cname,c.xuefeng,c.cdesc,sc.id,sc.score,sc.remark
+        FROM m2m_student s,m2m_course c,m2m_studentselectcourse sc
+        WHERE s.stuId=sc.stuId and c.cid=sc.cid and c.cid=#{c.cid}
+    </select>
+</mapper>

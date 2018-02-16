@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="manytomany.StudentSelectCourseMapper">
+    <insert id="save" parameterType="manytomany.StudentSelectCourse">
+        insert into m2m_studentselectcourse(stuId,cid,score,remark) values(#{stuId},#{cid},#{score},#{remark})
+    </insert>
+    <select id="findById" resultType="manytomany.StudentSelectCourse">
+        select * from m2m_studentselectcourse where id=#{id}
+    </select>
+    <select id="findByStuidAndCid" resultType="manytomany.StudentSelectCourse">
+        select * from m2m_studentselectcourse where stuId=#{stuId} and cid=#{cid}
+    </select>
+</mapper>
